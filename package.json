@@ -1,0 +1,46 @@
+{
+  "name": "quizCity",
+  "version": "1.0.0",
+  "description": "Learn geography while playing",
+  "main": "index.js",
+  "scripts": {
+    "webpack": "MODE=dev webpack",
+    "webpack-dev": " MODE=dev webpack --watch",
+    "webpack-dev-server": "MODE=dev webpack-dev-server",
+    "webpack-build": "MODE=production webpack -p",
+    "json-server": "json-server --watch db.json --port 3001",
+    "json-server-build": "json-server --watch db.json --port 3001 --static ./dist"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "Antonio José Masiá",
+  "license": "MIT",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.28.9",
+    "ejs": "^2.5.7",
+    "ejs-html-loader": "^3.1.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "file-loader": "^1.1.8",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^2.30.1",
+    "image-webpack-loader": "^4.1.0",
+    "node-sass": "^4.7.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.2",
+    "webpack": "^3.11.0",
+    "webpack-dev-server": "^2.11.1"
+  },
+  "dependencies": {
+    "bootstrap": "^4.0.0",
+    "jquery": "^3.3.1",
+    "pubsub-js": "^1.6.0",
+    "reset-css": "^2.2.1"
+  }
+}
