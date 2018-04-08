@@ -12,7 +12,7 @@ The player will see a map of Europe without Streets + Cities (Only Country-borde
 ## Instalation
 
 
-To install this template run `npm i` from root directory.
+To install this app run `npm i` from root directory.
 
 ## Configuration
 
