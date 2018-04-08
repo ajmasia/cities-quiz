@@ -1,6 +1,6 @@
 # A simple Cities Quiz
 
-The game consist in find cities on a Europe mute map.
+The game consist in to find different European cities on a mute map.
 
 The player will see a map of Europe without Streets + Cities (Only Country-borders). Its mission is to find the right location to the city name on this map. After placing the needle pin, the game will show you the right location of the city and the difference of your needle pin and the city in kilometres. If it is in around 50km of the city, the selection will be defined as "correct".
 

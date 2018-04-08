@@ -215,7 +215,7 @@ export class GameController {
     initGame() {
         swal({
             title: "Cities Quiz",
-            text: `Your mission is to find the right location to the different European cities on this map. If your position is greater than 50 km around, your selection will be incorrect. In each round you will lose the distance between the city and your selection. The game finishes when you lose all kms.`
+            text: `Your mission is to find the right location to the different European cities on this map. If your position is in around 50km of the city, your selection will be correct. In each round you will lose the distance between the city and your selection. The game finishes when you lose all kms.`
         })
         .then((willDelete) => {
             this.initializeButtons();
