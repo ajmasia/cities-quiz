@@ -15,9 +15,11 @@ export class PlayController {
         this.randomCity = this.randomCity(citiesList.cities);
         this.citieRound = 0;
 
-        this.buttonStart = document.querySelector('.game-buttons__start');
-        this.buttonPlace = document.querySelector('.game-buttons__place');
-        if (this.buttonPlace != null) this.addButtonEventListener();
+        this.buttons = document.getElementsByClassName('btn');
+        this.nextButton = document.querySelector('.game-buttons__next');
+        this.startButton = document.querySelector('.game-buttons__start');
+        this.placeButton = document.querySelector('.game-buttons__place');
+        if (this.placeButton != null) this.addButtonEventListener();
 
         this.initializeButtons();
         this.initializeRound();
@@ -26,38 +28,54 @@ export class PlayController {
     // Add click event to play button
     addButtonEventListener() {
 
-        this.buttonPlace.addEventListener('click', event => {
+        this.placeButton.addEventListener('click', event => {
 
             // Get current marker position
             var currentMarkerPosition = this.markers[0].position;
-
             console.log('Current marker position:', currentMarkerPosition.lat().toFixed(6), currentMarkerPosition.lng().toFixed(6));
-
-            // Show city objetive
-
 
 
             // Calulate distance
             var cityPositionInCurrentRound = new google.maps.LatLng(this.randomCity[this.citieRound].lat, this.randomCity[this.citieRound].long);
+            console.log('City posiotion in current round:', cityPositionInCurrentRound.lat().toFixed(6), cityPositionInCurrentRound.lng().toFixed(6));
 
-            console.log('City posotion in current round:', cityPositionInCurrentRound.lat().toFixed(6), cityPositionInCurrentRound.lng().toFixed(6));
 
-            var distance = google.maps.geometry.spherical.computeDistanceBetween(
-                currentMarkerPosition, cityPositionInCurrentRound) / 1000;
+            // Show city objetive
+            this.addCitieMarker(cityPositionInCurrentRound);
+
+            var distance = Math.round(google.maps.geometry.spherical.computeDistanceBetween(
+                currentMarkerPosition, cityPositionInCurrentRound) / 1000, 0);
             console.log('Distance: ', distance);
 
-            // Calculate new scoers
+            // Show rate message
+            document.querySelector('.game-messages__message').innerHTML = `Your rate ${distance} km`;
+
+            // Calculate new scores
             if (distance <= config.SUCCESSFUL_DISTANCE) {
                 this.citiesPlaced++;
                 document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
-                swal('Good Job!', `Great! You placed marker at ${distance} km`, 'success');
+                
+                swal({
+                    title: "Good Job!",
+                    text: `Great! You placed marker at ${distance} km`,
+                    icon: "success",
+                    buttons: true,
+                  })
+                  .then((willDelete) => {
+                      this.initializeButtons();
+                      this.initializeRound();
+                  });
+                
+                
+                // swal('Good Job!', `Great! You placed marker at ${distance} km`, 'success');
             }
 
-            this.kmLeft = this.kmLeft - Math.round(distance, 0)
+            // Show new score message
+            this.kmLeft = this.kmLeft - distance;
             document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
 
 
-            // New round
+            // Check round
             if (this.citieRound < this.randomCity.length - 1) {
 
                 this.citieRound++;
@@ -70,24 +88,32 @@ export class PlayController {
 
             // Check game state
             if (this.kmLeft >= config.SUCCESSFUL_DISTANCE) {
-                this.initializeButtons();
-                this.initializeRound();
+
+                this.showNextButton();
+                this.nextButton.addEventListener('click', event => {
+                    this.initializeButtons();
+                    this.initializeRound();
+                })
+
 
             } else {
 
+                // Game over
                 console.log('Game over');
 
+                // Change score state
                 document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>0</b> km left`;
 
-                document.querySelector('.game-messages__message').innerHTML = `Game over! You've placed ${this.citiesPlaced} cities correctly`;
+                document.querySelector('.game-messages__message').innerHTML = `Game over! You've placed <b>${this.citiesPlaced}</b> cities correctly`;
 
+                // Show start button
                 var buttons = document.getElementsByClassName('btn');
                 for (var i = 0; i < buttons.length; i++) {
                     buttons[i].classList.remove('inactive');
                 }
 
-                this.buttonPlace.classList.add('inactive');
-
+                this.placeButton.classList.add('inactive');
+                this.nextButton.classList.add('inactive');
 
             }
 
@@ -100,8 +126,7 @@ export class PlayController {
 
         var myLatlng = new google.maps.LatLng(40.433067, -3.700742);
 
-        this.clearMarkers();
-        this.markers = [];
+        this.deleteMarkers();
         var marker = this.addMarker(myLatlng);
 
         // Show new round message
@@ -129,6 +154,17 @@ export class PlayController {
         this.markers.push(marker);
     }
 
+    // Add marker to map method
+    addCitieMarker(location) {
+        var marker = new google.maps.Marker({
+            position: location,
+            title: `${this.randomCity[this.citieRound].capitalCity}`,
+            map: this.map
+        });
+
+        this.markers.push(marker);
+    }
+
 
     // Clear markers method
     clearMarkers() {
@@ -152,12 +188,26 @@ export class PlayController {
     }
 
     initializeButtons() {
-        var buttons = document.getElementsByClassName('btn');
-        for (var i = 0; i < buttons.length; i++) {
-            buttons[i].classList.remove('inactive');
+        for (var i = 0; i < this.buttons.length; i++) {
+            this.buttons[i].classList.remove('inactive');
         }
 
-        this.buttonStart.classList.add('inactive');
+        this.startButton.classList.add('inactive');
+        this.nextButton.classList.add('inactive');
     }
 
+    showNextButton() {
+
+        for (var i = 0; i < this.buttons.length; i++) {
+            this.buttons[i].classList.remove('inactive');
+        }
+
+        this.startButton.classList.add('inactive');
+        this.placeButton.classList.add('inactive');
+    }
+
+    deleteMarkers() {
+        this.clearMarkers();
+        this.markers = [];
+    }
 }
