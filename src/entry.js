@@ -3,21 +3,12 @@ import css from './scss/styles.scss';
 import swal from 'sweetalert';
 
 import { StartController } from './js/startController';
-import { PlayController } from './js/playController';
+import { GameController } from './js/gameController';
 
 
 document.addEventListener('DOMContentLoaded', () => {
     
     let startController = new StartController();
-    let playController = new PlayController(startController);
+    let gameController = new GameController(startController);
     console.log('Game running!');
-
-    var startButton = document.querySelector('.game-buttons__start');
-    
-    startButton.addEventListener('click', event => {
-        let startController = new StartController();
-        let playController = new PlayController(startController);
-        console.log('Game running again!');
-    });
-
 });

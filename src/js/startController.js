@@ -1,5 +1,5 @@
 /**
- * Star game controller
+ * Start game controller class
  */
 
 import config from '../config';

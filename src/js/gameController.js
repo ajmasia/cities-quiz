@@ -1,10 +1,13 @@
 /**
- * Play game controller
+ * Play game controller class
  */
+
+// Import needed libraries
 import config from '../config';
 import citiesList from './capitalCities';
 
-export class PlayController {
+
+export class GameController {
     // Initialize new object
     constructor(startController) {
 
@@ -17,7 +20,6 @@ export class PlayController {
 
         this.buttons = document.getElementsByClassName('btn');
         this.nextButton = document.querySelector('.game-buttons__next');
-        this.startButton = document.querySelector('.game-buttons__start');
         this.placeButton = document.querySelector('.game-buttons__place');
         if (this.placeButton != null) this.addButtonEventListener();
 
@@ -25,103 +27,10 @@ export class PlayController {
         this.initializeRound();
     }
 
-    // Add click event to play button
-    addButtonEventListener() {
+    /**
+     * Initizalize round
+     */
 
-        this.placeButton.addEventListener('click', event => {
-
-            // Get current marker position
-            var currentMarkerPosition = this.markers[0].position;
-            console.log('Current marker position:', currentMarkerPosition.lat().toFixed(6), currentMarkerPosition.lng().toFixed(6));
-
-
-            // Calulate distance
-            var cityPositionInCurrentRound = new google.maps.LatLng(this.randomCity[this.citieRound].lat, this.randomCity[this.citieRound].long);
-            console.log('City posiotion in current round:', cityPositionInCurrentRound.lat().toFixed(6), cityPositionInCurrentRound.lng().toFixed(6));
-
-
-            // Show city objetive
-            this.addCitieMarker(cityPositionInCurrentRound);
-
-            var distance = Math.round(google.maps.geometry.spherical.computeDistanceBetween(
-                currentMarkerPosition, cityPositionInCurrentRound) / 1000, 0);
-            console.log('Distance: ', distance);
-
-            // Show rate message
-            document.querySelector('.game-messages__message').innerHTML = `Your rate ${distance} km`;
-
-            // Calculate new scores
-            if (distance <= config.SUCCESSFUL_DISTANCE) {
-                this.citiesPlaced++;
-                document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
-                
-                swal({
-                    title: "Good Job!",
-                    text: `Great! You placed marker at ${distance} km`,
-                    icon: "success",
-                    buttons: true,
-                  })
-                  .then((willDelete) => {
-                      this.initializeButtons();
-                      this.initializeRound();
-                  });
-                
-                
-                // swal('Good Job!', `Great! You placed marker at ${distance} km`, 'success');
-            }
-
-            // Show new score message
-            this.kmLeft = this.kmLeft - distance;
-            document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
-
-
-            // Check round
-            if (this.citieRound < this.randomCity.length - 1) {
-
-                this.citieRound++;
-
-            } else {
-
-                this.citieRound = 0;
-
-            }
-
-            // Check game state
-            if (this.kmLeft >= config.SUCCESSFUL_DISTANCE) {
-
-                this.showNextButton();
-                this.nextButton.addEventListener('click', event => {
-                    this.initializeButtons();
-                    this.initializeRound();
-                })
-
-
-            } else {
-
-                // Game over
-                console.log('Game over');
-
-                // Change score state
-                document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>0</b> km left`;
-
-                document.querySelector('.game-messages__message').innerHTML = `Game over! You've placed <b>${this.citiesPlaced}</b> cities correctly`;
-
-                // Show start button
-                var buttons = document.getElementsByClassName('btn');
-                for (var i = 0; i < buttons.length; i++) {
-                    buttons[i].classList.remove('inactive');
-                }
-
-                this.placeButton.classList.add('inactive');
-                this.nextButton.classList.add('inactive');
-
-            }
-
-        });
-
-    }
-
-    // Initialize new game round
     initializeRound() {
 
         var myLatlng = new google.maps.LatLng(40.433067, -3.700742);
@@ -134,13 +43,98 @@ export class PlayController {
 
     }
 
+    /**
+     * Place button clieck event
+     */
+
+    addButtonEventListener() {
+
+        this.placeButton.addEventListener('click', event => {
+            
+            // Get positions
+            var currentMarkerPosition = this.markers[0].position;
+
+            console.log('Current marker position:', currentMarkerPosition.lat().toFixed(6), currentMarkerPosition.lng().toFixed(6));
+
+            // Calulate distance
+            var cityPositionInCurrentRound = new google.maps.LatLng(this.randomCity[this.citieRound].lat, this.randomCity[this.citieRound].long);
+
+            console.log('City posiotion in current round:', cityPositionInCurrentRound.lat().toFixed(6), cityPositionInCurrentRound.lng().toFixed(6));
+
+            // Show city objetive
+            this.addCitieMarker(cityPositionInCurrentRound);
+
+            // Calculate distance
+            var distance = Math.round(google.maps.geometry.spherical.computeDistanceBetween(
+                currentMarkerPosition, cityPositionInCurrentRound) / 1000, 0);
+            console.log('Distance: ', distance);
+
+            // Show rate message
+            document.querySelector('.game-messages__message').innerHTML = `Your rate ${distance} km`;
+
+            // Score update
+            if (distance <= config.SUCCESSFUL_DISTANCE) {
+
+                // Increase cities placed scores
+                this.citiesPlaced++;
+
+                // Update cities score div
+                document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
+
+                // Show message
+                swal({
+                        title: "Good Job!",
+                        text: `Great! You placed marker at ${distance} km`,
+                        icon: "success"
+                    })
+                    .then((willDelete) => {
+                        this.initializeButtons();
+                        this.initializeRound();
+                    });
+
+            }
+
+            // Decrement km left scores
+            this.kmLeft = this.kmLeft - distance;
+
+            // Update km left score
+            document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
+
+            // Check round game state
+            if (this.citieRound < this.randomCity.length - 1) {
+                this.citieRound++;
+            } else {
+                this.citieRound = 0;
+            }
+
+            // Check game state
+            if (this.kmLeft > 0) {
+                this.showNextButton();
+                this.nextButton.addEventListener('click', event => {
+                    this.initializeButtons();
+                    this.initializeRound();
+                })
+            } else {
+                this.gameOver();
+            }
+
+        });
+
+    }
+
+    /**
+     * Auziliar methods
+     */
+
     // Add marker to map method
     addMarker(location) {
         var marker = new google.maps.Marker({
             position: location,
-            title: "Begin here!",
+            title: "Your place",
             draggable: true,
-            map: this.map
+            animation: google.maps.Animation.DROP,
+            map: this.map,
+            icon: '../assets/meMarker.png'
         });
 
         google.maps.event.addListener(
@@ -159,12 +153,13 @@ export class PlayController {
         var marker = new google.maps.Marker({
             position: location,
             title: `${this.randomCity[this.citieRound].capitalCity}`,
-            map: this.map
+            animation: google.maps.Animation.DROP,
+            map: this.map,
+            icon: '../assets/citieMarker.png'
         });
 
         this.markers.push(marker);
     }
-
 
     // Clear markers method
     clearMarkers() {
@@ -173,6 +168,11 @@ export class PlayController {
             this.markers[i].setMap(null);
         }
 
+    }
+
+    deleteMarkers() {
+        this.clearMarkers();
+        this.markers = [];
     }
 
     // Randomize citie method
@@ -187,27 +187,41 @@ export class PlayController {
 
     }
 
+    // Initialize buttons
     initializeButtons() {
         for (var i = 0; i < this.buttons.length; i++) {
             this.buttons[i].classList.remove('inactive');
         }
 
-        this.startButton.classList.add('inactive');
         this.nextButton.classList.add('inactive');
     }
 
+    // Show next button
     showNextButton() {
 
         for (var i = 0; i < this.buttons.length; i++) {
             this.buttons[i].classList.remove('inactive');
         }
 
-        this.startButton.classList.add('inactive');
         this.placeButton.classList.add('inactive');
     }
 
-    deleteMarkers() {
-        this.clearMarkers();
-        this.markers = [];
+    // Game over
+    gameOver() {
+        // Game over
+        console.log('Game over');
+
+        // Change score state
+        document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>0</b> km left`;
+
+        document.querySelector('.game-messages__message').innerHTML = `You don't have any more km`;
+
+        swal({
+            title: "GAME OVER",
+            text: `Press ok button to play again`
+        })
+        .then((willDelete) => {
+            location.reload();
+        });
     }
 }
