@@ -1,12 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Quiz City</title>
+    <title>Cities Quiz</title>
 </head>
+
 <body>
-    Game is running!
+    <div class="container-fluid">
+        <!-- <h1>Cities Quiz</h1> -->
+        
+        <div class="row">
+            <div class="game-info col-6">
+                    <div class="game-info__cities-score alert alert-info">
+                        Cities
+                    </div>        
+            </div>
+            <div class="game-info col-6">
+                    <div class="game-info__kmLeft-score alert alert-info">
+                        Km left
+                    </div>        
+            </div>
+        </div>
+        <div class="row">
+                <div class="game-messages col-12">
+                    <div class="game-messages__message alert alert-warning text-center"></div>        
+                </div>
+        </div>
+        <div class="row">
+                <div class="game-map col-12">
+                        <div id="map"></div>
+                </div>
+        </div>
+    
+        <div class="row">
+            <div class="game-buttons col-12 d-flex flex-row-reverse">
+                    <button type="button" class="game-buttons__place btn btn-success">Place</button>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- <div id="map"></div> -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAC_u4tIdKvCW0D4wVlkTLX1mOOiVMqfnE&region=EU&libraries=geometry"></script>
 </body>
+
 </html>

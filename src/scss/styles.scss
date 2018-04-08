@@ -1,0 +1,19 @@
+@import '~reset-css/reset';
+@import '~bootstrap/scss/bootstrap';
+
+body {
+  padding-top: 15px;
+}
+
+#map {
+  min-height: 73vh;
+  height: auto; 
+}
+.game-buttons {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.inactive {
+  display: none;
+}
