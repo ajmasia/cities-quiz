@@ -8,6 +8,7 @@ import { GameController } from './js/gameController';
 import { ScoresController } from './js/scoresController';
 
 
+
 document.addEventListener('DOMContentLoaded', () => {
     
     let startController = new StartController();

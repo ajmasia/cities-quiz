@@ -20,6 +20,12 @@ module.exports = {
 }
 ```
 
+Yo need config a valid Google API KEY. You must config it changing value `YOUR_API_KEY` in the `index.html` app script.
+
+```html
+<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&region=EU&libraries=geometry"></script>
+```
+
 ## Start scripts
 
 | Command  | Mode |
