@@ -1,13 +1,24 @@
-# Webpack Bootstrap development environment template
+# A simple Cities Quiz
+
+The game consist in find cities on a Europe mute map.
+
+The player will see a map of Europe without Streets + Cities (Only Country-borders). Its mission is to find the right location to the city name on this map. After placing the needle pin, the game will show you the right location of the city and the difference of your needle pin and the city in kilometres. If it is in around 50km of the city, the selection will be defined as "correct".
+
 ## Instalation
+
 
 To install this template run `npm i` from root directory.
 
-## Webpack config support
-- Ejs templates
-- SASS
-- Babel trasnpiler 
-- Assets loaders with image optimizations
+## Configuration
+
+Yo can change initial game configuration editing `config.js` file:
+
+```js
+module.exports = {
+    INITIAL_KM_LEFT: 1500,
+    SUCCESSFUL_DISTANCE: 50
+}
+```
 
 ## Start scripts
 
@@ -19,9 +30,14 @@ To install this template run `npm i` from root directory.
 | `npm run webpack-build` | Execute webpack in production mode |
 
 
-## More information
+## Webpack config support
+- Ejs templates
+- SASS
+- Babel trasnpiler 
+- Assets loaders with image optimizations
 
-- [How to include Bootstrap in your project with Webpack](https://stevenwestmoreland.com/2018/01/how-to-include-bootstrap-in-your-project-with-webpack.html)
-- [Webpack with Bootstrap](https://getbootstrap.com/docs/4.0/getting-started/webpack/)
-- [Bootstrap](https://getbootstrap.com/)
+## This game use
 - [Webpack](https://github.com/webpack/webpack)
+- [Bootstrap](https://getbootstrap.com/)
+- [sweetalert](https://sweetalert.js.org/)
+- [pubsub-js](https://www.npmjs.com/package/pubsub-js)

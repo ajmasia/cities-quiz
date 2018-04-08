@@ -49,6 +49,26 @@ module.exports = {
             "capitalCity": "Brussels",
             "lat": "50.850201",
             "long": "4.350327"
+        },
+        {
+            "capitalCity": "Jeréz de la Frontera",
+            "lat": "36.684448",
+            "long": "-6.126906"
+        },
+        {
+            "capitalCity": "Prague",
+            "lat": "50.075012",
+            "long": "14.438840"
+        },
+        {
+            "capitalCity": "Budapest",
+            "lat": "47.563168",
+            "long": "19.137093"
+        },
+        {
+            "capitalCity": "Athens",
+            "lat": "38.277568",
+            "long": "23.848963"
         }
     ]
 }

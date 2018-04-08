@@ -37,6 +37,10 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.scss$/, // Any file ends with .scss
+                use: scssLoaders
+            },
+            {
                 test: /\.js$/,
                 use: 'babel-loader',
                 exclude: path.join(__dirname, 'node_modules')
@@ -50,10 +54,6 @@ module.exports = {
             }, {
                 test: /assets.[^img]/,
                 use: 'file-loader?name=[name].[ext]&useRelativePath=true'
-            },
-            {
-                test: /\.scss$/, // Any file ends with .scss
-                use: scssLoaders
             }
         ]
     },

@@ -9,7 +9,7 @@ import citiesList from './capitalCities';
 
 export class GameController {
     // Initialize new object
-    constructor(startController) {
+    constructor(startController, pubSub) {
 
         this.map = startController.map;
         this.citiesPlaced = startController.citiesPlaced;
@@ -17,14 +17,15 @@ export class GameController {
         this.markers = [];
         this.randomCity = this.randomCity(citiesList.cities);
         this.citieRound = 0;
+        this.distance = 0;
+        this.pubSub = pubSub;
 
         this.buttons = document.getElementsByClassName('btn');
         this.nextButton = document.querySelector('.game-buttons__next');
         this.placeButton = document.querySelector('.game-buttons__place');
         if (this.placeButton != null) this.addButtonEventListener();
 
-        this.initializeButtons();
-        this.initializeRound();
+        this.initGame();
     }
 
     /**
@@ -33,14 +34,14 @@ export class GameController {
 
     initializeRound() {
 
-        var myLatlng = new google.maps.LatLng(40.433067, -3.700742);
+        var myLatlng = new google.maps.LatLng(48.747728, 14.847475);
 
         this.deleteMarkers();
         var marker = this.addMarker(myLatlng);
 
         // Show new round message
-        document.querySelector('.game-messages__message').innerHTML = `Select the location of <b>${this.randomCity[this.citieRound].capitalCity}</b>`;
-
+        var cityToFindNow = this.randomCity[this.citieRound].capitalCity;
+        document.querySelector('.game-messages__message').innerHTML = `Select the location of <b>${cityToFindNow}</b>`;
     }
 
     /**
@@ -68,6 +69,7 @@ export class GameController {
             var distance = Math.round(google.maps.geometry.spherical.computeDistanceBetween(
                 currentMarkerPosition, cityPositionInCurrentRound) / 1000, 0);
             console.log('Distance: ', distance);
+            this.distance = distance;
 
             // Show rate message
             document.querySelector('.game-messages__message').innerHTML = `Your rate ${distance} km`;
@@ -77,28 +79,13 @@ export class GameController {
 
                 // Increase cities placed scores
                 this.citiesPlaced++;
-
-                // Update cities score div
-                document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
-
-                // Show message
-                swal({
-                        title: "Good Job!",
-                        text: `Great! You placed marker at ${distance} km`,
-                        icon: "success"
-                    })
-                    .then((willDelete) => {
-                        this.initializeButtons();
-                        this.initializeRound();
-                    });
+                this.pubSub.publish('cityFound');
 
             }
 
             // Decrement km left scores
             this.kmLeft = this.kmLeft - distance;
-
-            // Update km left score
-            document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
+            this.pubSub.publish('kmLeftChange');
 
             // Check round game state
             if (this.citieRound < this.randomCity.length - 1) {
@@ -123,7 +110,7 @@ export class GameController {
     }
 
     /**
-     * Auziliar methods
+     * Auxiliar methods
      */
 
     // Add marker to map method
@@ -134,7 +121,7 @@ export class GameController {
             draggable: true,
             animation: google.maps.Animation.DROP,
             map: this.map,
-            icon: '../assets/meMarker.png'
+            icon: require('../assets/images/meMarker.png')
         });
 
         google.maps.event.addListener(
@@ -155,7 +142,7 @@ export class GameController {
             title: `${this.randomCity[this.citieRound].capitalCity}`,
             animation: google.maps.Animation.DROP,
             map: this.map,
-            icon: '../assets/citieMarker.png'
+            icon: require('../assets/images/citieMarker.png')
         });
 
         this.markers.push(marker);
@@ -222,6 +209,17 @@ export class GameController {
         })
         .then((willDelete) => {
             location.reload();
+        });
+    }
+
+    initGame() {
+        swal({
+            title: "Cities Quiz",
+            text: `Your mission is to find the right location to the different European cities on this map. If your position is greater than 50 km around, your selection will be incorrect. In each round you will lose the distance between the city and your selection. The game finishes when you lose all kms.`
+        })
+        .then((willDelete) => {
+            this.initializeButtons();
+            this.initializeRound();
         });
     }
 }
