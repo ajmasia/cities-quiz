@@ -1,7 +1,7 @@
 /**
  * Play game controller
  */
-
+import config from '../config';
 import citiesList from './capitalCities';
 
 export class PlayController {
@@ -9,32 +9,90 @@ export class PlayController {
     constructor(startController) {
 
         this.map = startController.map;
+        this.citiesPlaced = startController.citiesPlaced;
+        this.kmLeft = startController.kmLeft;
         this.markers = [];
-        this.button = document.querySelector('.game-buttons__place');
         this.randomCity = this.randomCity(citiesList.cities);
         this.citieRound = 0;
-        this.placedCoords = '';
-        if (this.button != null) this.addButtonEventListener();
+
+        this.buttonStart = document.querySelector('.game-buttons__start');
+        this.buttonPlace = document.querySelector('.game-buttons__place');
+        if (this.buttonPlace != null) this.addButtonEventListener();
+
+        this.initializeButtons();
         this.initializeRound();
     }
 
     // Add click event to play button
     addButtonEventListener() {
-        
-        this.button.addEventListener('click', event => {
-            if (this.citieRound < this.randomCity.length - 1) {
-                this.citieRound++;
-            } else {
-                this.citieRound = 0;
-            }
-            console.log(this.placedCoords);
-            // Show city objetive
-            // Calulate distance
-            // Calculate new scoers
 
-            this.initializeRound();
+        this.buttonPlace.addEventListener('click', event => {
+
+            // Get current marker position
+            var currentMarkerPosition = this.markers[0].position;
+
+            console.log('Current marker position:', currentMarkerPosition.lat().toFixed(6), currentMarkerPosition.lng().toFixed(6));
+
+            // Show city objetive
+
+
+
+            // Calulate distance
+            var cityPositionInCurrentRound = new google.maps.LatLng(this.randomCity[this.citieRound].lat, this.randomCity[this.citieRound].long);
+
+            console.log('City posotion in current round:', cityPositionInCurrentRound.lat().toFixed(6), cityPositionInCurrentRound.lng().toFixed(6));
+
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(
+                currentMarkerPosition, cityPositionInCurrentRound) / 1000;
+            console.log('Distance: ', distance);
+
+            // Calculate new scoers
+            if (distance <= config.SUCCESSFUL_DISTANCE) {
+                this.citiesPlaced++;
+                document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
+                swal('Good Job!', `Great! You placed marker at ${distance} km`, 'success');
+            }
+
+            this.kmLeft = this.kmLeft - Math.round(distance, 0)
+            document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
+
+
+            // New round
+            if (this.citieRound < this.randomCity.length - 1) {
+
+                this.citieRound++;
+
+            } else {
+
+                this.citieRound = 0;
+
+            }
+
+            // Check game state
+            if (this.kmLeft >= config.SUCCESSFUL_DISTANCE) {
+                this.initializeButtons();
+                this.initializeRound();
+
+            } else {
+
+                console.log('Game over');
+
+                document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>0</b> km left`;
+
+                document.querySelector('.game-messages__message').innerHTML = `Game over! You've placed ${this.citiesPlaced} cities correctly`;
+
+                var buttons = document.getElementsByClassName('btn');
+                for (var i = 0; i < buttons.length; i++) {
+                    buttons[i].classList.remove('inactive');
+                }
+
+                this.buttonPlace.classList.add('inactive');
+
+
+            }
+
         });
-    
+
     }
 
     // Initialize new game round
@@ -43,11 +101,11 @@ export class PlayController {
         var myLatlng = new google.maps.LatLng(40.433067, -3.700742);
 
         this.clearMarkers();
-        this.addMarker(myLatlng);
-        
+        this.markers = [];
+        var marker = this.addMarker(myLatlng);
+
         // Show new round message
         document.querySelector('.game-messages__message').innerHTML = `Select the location of <b>${this.randomCity[this.citieRound].capitalCity}</b>`;
-        console.log(this.placedCoords);
 
     }
 
@@ -60,42 +118,46 @@ export class PlayController {
             map: this.map
         });
 
-        var coords = google.maps.event.addListener(
+        google.maps.event.addListener(
             marker,
-            'drag',
-            function(e) {
-                var lat = marker.position.lat().toFixed(6);
-                var lng = marker.position.lng().toFixed(6);
-                console.log(lat, lng);
+            'dragend',
+            function () {
+                marker.setPosition(marker.getPosition());
             }
         );
-        
+
         this.markers.push(marker);
     }
 
+
     // Clear markers method
     clearMarkers() {
-        
+
         for (let i = 0; i < this.markers.length; i++) {
-          this.markers[i].setMap(null);
+            this.markers[i].setMap(null);
         }
 
     }
 
     // Randomize citie method
     randomCity(data) {
-        
+
         for (let i = data.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [data[i], data[j]] = [data[j], data[i]];
         }
-        
+
         return data;
-    
-    }
-
-    roundCityLocation() {
 
     }
-    
+
+    initializeButtons() {
+        var buttons = document.getElementsByClassName('btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('inactive');
+        }
+
+        this.buttonStart.classList.add('inactive');
+    }
+
 }

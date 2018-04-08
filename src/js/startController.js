@@ -18,7 +18,6 @@ export class StartController {
     
     // Initializad google map
     initMap() {
-        
         // Create new map object
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 4,
@@ -40,9 +39,9 @@ export class StartController {
         });
 
         // Show initial scores
-        document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`
-        document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`
-        document.querySelector('.game-messages__message').innerHTML = `Wellcome to <b>Cities Quiz</b>!`
+        document.querySelector('.game-info__cities-score').innerHTML = `Cities placed <b>${this.citiesPlaced}</b>`;
+        document.querySelector('.game-info__kmLeft-score').innerHTML = `<b>${this.kmLeft}</b> km left`;
+        document.querySelector('.game-messages__message').innerHTML = `Wellcome to <b>Cities Quiz</b>!`;
         return map;
 
     }
