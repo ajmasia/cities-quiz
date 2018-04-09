@@ -69,6 +69,16 @@ module.exports = {
             "capitalCity": "Athens",
             "lat": "38.277568",
             "long": "23.848963"
+        },
+        {
+            "capitalCity": "Hannover",
+            "lat": "52.375823",
+            "long": "9.752068"
+        },
+        {
+            "capitalCity": "Luxembourg",
+            "lat": "49.609469",
+            "long": "6.136877"
         }
     ]
 }
