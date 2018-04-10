@@ -10,8 +10,8 @@
 
 <body>
     <div class="container-fluid">
-        <!-- <h1>Cities Quiz</h1> -->
         
+        <!-- Game info -->
         <div class="row">
             <div class="game-info col-6">
                     <div class="game-info__cities-score alert alert-info">
@@ -24,17 +24,22 @@
                     </div>        
             </div>
         </div>
+
+        <!-- Game messages -->
         <div class="row">
                 <div class="game-messages col-12">
                     <div class="game-messages__message alert alert-warning text-center"></div>        
                 </div>
         </div>
+
+        <!-- Game map -->
         <div class="row">
                 <div class="game-map col-12">
                         <div id="map"></div>
                 </div>
         </div>
     
+        <!-- Game buttons -->
         <div class="row">
             <div class="game-buttons col-12 d-flex flex-row-reverse">
                     <button type="button" class="game-buttons__place btn btn-success">Place</button>
@@ -43,6 +48,8 @@
         </div>
         
     </div>
+    
+    <!-- Google maps api -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&region=EU&libraries=geometry"></script>
 </body>
 
