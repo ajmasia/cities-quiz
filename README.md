@@ -7,10 +7,7 @@ The player will see a map of Europe without Streets + Cities (Only Country-borde
 ![Getting Started](./img01_citiesQuiz.png)
 ![Getting Started](./img02_citiesQuiz.png)
 
-
-
 ## Instalation
-
 
 To install this app run `npm i` from root directory.
 
@@ -20,9 +17,9 @@ Yo can change initial game configuration editing `config.js` file:
 
 ```js
 module.exports = {
-    INITIAL_KM_LEFT: 1500,
-    SUCCESSFUL_DISTANCE: 50
-}
+  INITIAL_KM_LEFT: 1500,
+  SUCCESSFUL_DISTANCE: 50
+};
 ```
 
 Yo need config a valid Google API KEY. You must config it changing value `YOUR_API_KEY` in the `index.html` app script.
@@ -33,22 +30,27 @@ Yo need config a valid Google API KEY. You must config it changing value `YOUR_A
 
 ## Start scripts
 
-| Command  | Mode |
-| ------------- | ------------- |
-| `npm run webpack` | Execute webpack in dev mode |
-| `npm run webpacl-dev` | Execute webpack in changes observe dev mode |
+| Command                      | Mode                                                     |
+| ---------------------------- | -------------------------------------------------------- |
+| `npm run webpack`            | Execute webpack in dev mode                              |
+| `npm run webpacl-dev`        | Execute webpack in changes observe dev mode              |
 | `npm run webpack-dev-server` | Execute webpack with automatic browser reload dev server |
-| `npm run webpack-build` | Execute webpack in production mode |
-
+| `npm run webpack-build`      | Execute webpack in production mode                       |
 
 ## Webpack config support
-- Ejs templates
-- SASS
-- Babel trasnpiler 
-- Assets loaders with image optimizations
+
+* Ejs templates
+* SASS
+* Babel trasnpiler
+* Assets loaders with image optimizations
 
 ## This game use
-- [Webpack](https://github.com/webpack/webpack)
-- [Bootstrap](https://getbootstrap.com/)
-- [sweetalert](https://sweetalert.js.org/)
-- [pubsub-js](https://www.npmjs.com/package/pubsub-js)
+
+* [Webpack](https://github.com/webpack/webpack)
+* [Bootstrap](https://getbootstrap.com/)
+* [sweetalert](https://sweetalert.js.org/)
+* [pubsub-js](https://www.npmjs.com/package/pubsub-js)
+
+### Bugs
+
+20180516 | Solved a problem loading maps when used in a terminal with English language.
